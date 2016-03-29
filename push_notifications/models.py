@@ -1,10 +1,14 @@
+from __future__ import unicode_literals
+
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from .fields import HexIntegerField
 
 
+@python_2_unicode_compatible
 class Device(models.Model):
 	name = models.CharField(max_length=255, verbose_name=_("Name"), blank=True, null=True)
 	active = models.BooleanField(verbose_name=_("Is active"), default=True,
@@ -15,10 +19,10 @@ class Device(models.Model):
 	class Meta:
 		abstract = True
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.name or \
-			str(self.device_id or "") or \
-			"%s for %s" % (self.__class__.__name__, self.user or "unknown user")
+			   str(self.device_id or "") or \
+			   "%s for %s" % (self.__class__.__name__, self.user or "unknown user")
 
 
 class GCMDeviceManager(models.Manager):
