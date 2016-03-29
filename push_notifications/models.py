@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from .fields import HexIntegerField
@@ -45,7 +46,8 @@ class GCMDevice(Device):
 	device_id = HexIntegerField(verbose_name=_("Device ID"), blank=True, null=True, db_index=True,
 		help_text=_("ANDROID_ID / TelephonyManager.getDeviceId() (always as hex)"))
 	registration_id = models.TextField(verbose_name=_("Registration ID"))
-
+	devices = GenericRelation('shoutit.Device', related_query_name='gcm_devices')
+	
 	objects = GCMDeviceManager()
 
 	class Meta:
@@ -76,6 +78,7 @@ class APNSDevice(Device):
 	device_id = models.UUIDField(verbose_name=_("Device ID"), blank=True, null=True, db_index=True,
 		help_text="UDID / UIDevice.identifierForVendor()")
 	registration_id = models.CharField(verbose_name=_("Registration ID"), max_length=64, unique=True)
+	devices = GenericRelation('shoutit.Device', related_query_name='apns_devices')
 
 	objects = APNSDeviceManager()
 
